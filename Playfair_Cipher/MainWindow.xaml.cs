@@ -20,9 +20,11 @@ namespace Playfair_Cipher
     /// </summary>
     public partial class MainWindow : Window
     {
+        Encode encode = new Encode();
         public MainWindow()
         {
             InitializeComponent();
+
         }
     }
 }
