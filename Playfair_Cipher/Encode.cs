@@ -11,27 +11,36 @@ namespace Playfair_Cipher
     {
         keyTable kt = new keyTable();
         MultiDArray multiD = new MultiDArray();
+
         public Encode()
         {
-            
+            MessageBox.Show(encode());
         }
-        string message = "Can you please encode this for me";
+        string message = "Can you pleease encode this for me";
         List<string> splitMessage = new List<string>();
-        string encodedMessage = "";
+        string encodedMessage;
 
         string encode()
         {
             message = message.Replace(" ", String.Empty).ToUpper();
-            for (int i = 0; i < message.Length; i+=2)
+            for (int i = 0; i < message.Length; i++)
             {
-                if (i == (message.Length -1))
+                if (i==0 || i % 2 == 0)
                 {
-                    //to make sure the last character is part of a digram by appending "X" to the end. Cipher cannot have monograms
-                    splitMessage.Add(String.Format("{0}X", message[i]));
-                }
-                else
-                {
-                    splitMessage.Add(String.Format("{0}{1}", message[i], message[i + 1]));
+                    if (i == (message.Length - 1))
+                    {
+                        message += "X";
+                        splitMessage.Add(String.Format("{0}{1}", message[i], message[i + 1]));
+                    }
+                    else if (message[i] == message[i + 1])
+                    {
+                        message = message.Insert(i + 1, "X");
+                        splitMessage.Add(String.Format("{0}{1}", message[i], message[i + 1]));
+                    }
+                    else
+                    {
+                        splitMessage.Add(String.Format("{0}{1}", message[i], message[i + 1]));
+                    }
                 }
             }
 

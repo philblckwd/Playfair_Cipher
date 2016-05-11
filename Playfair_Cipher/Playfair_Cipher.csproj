@@ -63,6 +63,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Decode.cs" />
     <Compile Include="Encode.cs" />
     <Compile Include="keyTable.cs" />
     <Compile Include="MainWindow.xaml.cs">

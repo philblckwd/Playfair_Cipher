@@ -13,13 +13,6 @@ namespace Playfair_Cipher
         public keyTable()
         {
             createkeyTable();
-            /*for (int i = 0; i < table.GetLength(0); i++)
-            {
-                for (int j = 0; j < table.GetLength(1); j++)
-                {
-                    return String.Format("{0} ", table[i, j]);
-                }
-            }*/
         }
 
         public char[,] table = new char[5, 5];

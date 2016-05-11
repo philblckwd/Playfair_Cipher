@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,10 +22,10 @@ namespace Playfair_Cipher
     public partial class MainWindow : Window
     {
         Encode encode = new Encode();
+        Decode decode = new Decode();
         public MainWindow()
         {
             InitializeComponent();
-
         }
     }
 }
