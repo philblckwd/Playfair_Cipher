@@ -9,23 +9,24 @@ namespace Playfair_Cipher
 {
     class Decode
     {
+        public Decode()
+        {
+
+        }
+
         keyTable kt = new keyTable();
         MultiDArray multiD = new MultiDArray();
 
-        public Decode()
-        {
-            MessageBox.Show(decode());
-        }
+        /*string encodedMessage = "DLQLNVLAXMDEOMRODNODZBMKASEIXM";*/
+        public string decodedMessage = "";
 
-        string encodedMessage = "DLQLNVLAXMDEOMRODNODZBMKASEIXM";
-        List<string> splitMessage = new List<string>();
-        string decodedMessage;
-
-        string decode()
+        public void decode(char[,] cipher, string encoded)
         {
-            for (int i=0; i< encodedMessage.Length; i+=2)
+            List<string> splitMessage = new List<string>();
+
+            for (int i=0; i< encoded.Length; i+=2)
             {
-                splitMessage.Add(String.Format("{0}{1}", encodedMessage[i], encodedMessage[i + 1]));
+                splitMessage.Add(String.Format("{0}{1}", encoded[i], encoded[i + 1]));
             }
             for (int j = 0; j < splitMessage.Count; j++)
             {
@@ -40,19 +41,19 @@ namespace Playfair_Cipher
                 {
                     if (firstCoords[1] == 0)
                     {
-                        decodedFirst = kt.table[firstCoords[0], (kt.table.GetLength(1)-1)];
+                        decodedFirst = cipher[firstCoords[0], (cipher.GetLength(1)-1)];
                     }
                     else
                     {
-                        decodedFirst = kt.table[firstCoords[0], firstCoords[1] - 1];
+                        decodedFirst = cipher[firstCoords[0], firstCoords[1] - 1];
                     }
                     if (secondCoords[1] == 0)
                     {
-                        decodedSecond = kt.table[secondCoords[0], (kt.table.GetLength(1)-1)];
+                        decodedSecond = cipher[secondCoords[0], (cipher.GetLength(1)-1)];
                     }
                     else
                     {
-                        decodedSecond = kt.table[secondCoords[0], secondCoords[1] - 1];
+                        decodedSecond = cipher[secondCoords[0], secondCoords[1] - 1];
                     }
                     decodedMessage += String.Format("{0}{1}", decodedFirst, decodedSecond);
                 }
@@ -60,31 +61,30 @@ namespace Playfair_Cipher
                 {
                     if (firstCoords[0] == 0)
                     {
-                        decodedFirst = kt.table[(kt.table.GetLength(0) -1), firstCoords[1]];
+                        decodedFirst = cipher[(cipher.GetLength(0) -1), firstCoords[1]];
                     }
                     else
                     {
-                        decodedFirst = kt.table[firstCoords[0] - 1, firstCoords[1]];
+                        decodedFirst = cipher[firstCoords[0] - 1, firstCoords[1]];
                     }
                     if (secondCoords[0] == 0)
                     {
-                        decodedSecond = kt.table[(kt.table.GetLength(0) -1), secondCoords[1]];
+                        decodedSecond = cipher[(cipher.GetLength(0) -1), secondCoords[1]];
                     }
                     else
                     {
-                        decodedSecond = kt.table[secondCoords[0] - 1, secondCoords[1]];
+                        decodedSecond = cipher[secondCoords[0] - 1, secondCoords[1]];
                     }
                     decodedMessage += String.Format("{0}{1}", decodedFirst, decodedSecond);
                 }
                 else
                 {
-                    decodedFirst = kt.table[firstCoords[0], secondCoords[1]];
-                    decodedSecond = kt.table[secondCoords[0], firstCoords[1]];
+                    decodedFirst = cipher[firstCoords[0], secondCoords[1]];
+                    decodedSecond = cipher[secondCoords[0], firstCoords[1]];
 
                     decodedMessage += String.Format("{0}{1}", decodedFirst, decodedSecond);
                 }
             }
-            return decodedMessage;
         }
 
     }
