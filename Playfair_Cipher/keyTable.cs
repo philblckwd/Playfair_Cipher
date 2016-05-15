@@ -12,14 +12,14 @@ namespace Playfair_Cipher
     {
         public keyTable()
         {
-            createkeyTable();
+            createKeyTable();
         }
 
         public char[,] table = new char[5, 5];
         List<char> checkDuplicates = new List<char>();
         string key = "Playfair Example".ToUpper();
         
-        public char[,] createkeyTable()
+        public char[,] createKeyTable()
         {
             key = key.Replace(" ", String.Empty);
             //i=j for the sake of 5x5 square;

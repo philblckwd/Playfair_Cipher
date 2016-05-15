@@ -14,77 +14,54 @@ namespace Playfair_Cipher
 
         }
         Random rand = new Random();
-        MultiDArray multiD = new MultiDArray();
         RandomCipher randCipher = new RandomCipher();
         Decode decode = new Decode();
-        keyTable kt = new keyTable();
+        AlterCipher alterCipher = new AlterCipher();
 
         //using encoded message of original string and key/Cipher I use in encode.cs and keytable.cs.
-        string encodedMessage = "DLQLNVLAXMDEOMRODNODZBMKASEIXM"; //make into user input.
+        string encodedMessage = "MBEBXFANADZGROAQLUBWRPPRDNLRCOPKDEIUDMCTWMTMQCSAYPAFMBEBXFANADVKXFODKFBPIVRPPRDNLRCOKVDILEVKANQNPVPRHBPBOEEXOQWBFVRVAKSCXEPYDRCTUPMAZBXEIXESXLRKDEDBLALDXVDMEXXEMKYVYVRPHAANVXCRRXBTMKOMOEOCDPODXFANADDQVOGPXM"; 
         List<string> splitMessage = new List<string>();
         string decodedMessage;
 
         int n = 0;
-        int m = 0;
         int score = 0;
         int prevScore = 0;
 
-        void alterCipher(char[,] next, char[,] previous)
-        {
-            for (int a=0; a<previous.GetLength(0); a++)
-            {
-                for (int b=0; b<previous.GetLength(1); b++)
-                {
-                    if (m == 0 || m % 2 == 0)
-                    {
-                        if (!(a == previous.GetLength(0) - 1))
-                        {
-                            next[a,b] = previous[a + 1,b];
-                        }
-                        else
-                        {
-                            next[a, b] = previous[0, b];
-                        }
-                    }
-                    else
-                    {
-                        if (!(b == previous.GetLength(1) -1))
-                        {
-                            next[a, b] = previous[a, b + 1];
-                        }
-                        else
-                        {
-                            next[a, b] = previous[a, 0];
-                        }
-                    }
-                }
-            }
-            m++;
-        }
-
-        public string currDecoded;
+        string currDecoded;
+        List<string> duplicates = new List<string>();
 
         public void breakLoop()
         {
-            List<string> duplicates = new List<string>();
             char[,] originalCipher = randCipher.randCipher();
             char[,] alteredCipher = new char[5, 5];
             int total = 0;
-            char[,] test = new char[5,5];
+
             while (n < 5)
             {
-                prevScore = score;
+                total = 0;
+
                 if (n == 0)
                 {
-                    decode.decode(originalCipher, encodedMessage);
-                    currDecoded = decode.decodedMessage;
+                    currDecoded = decode.decode(originalCipher, encodedMessage);
+                }
+                else if (n == 1)
+                {
+                    prevScore = score;
+                    alterCipher.alter(alteredCipher, originalCipher);
+                    currDecoded = decode.decode(alteredCipher, encodedMessage);
                 }
                 else
                 {
-                    alterCipher(alteredCipher, originalCipher);
-                    decode.decode(alteredCipher, encodedMessage);
-                    currDecoded = decode.decodedMessage;
+                    if (score > prevScore)
+                    {
+                        originalCipher = alteredCipher;
+                        prevScore = score;
+                    }
+
+                    alterCipher.alter(alteredCipher, originalCipher);
+                    currDecoded = decode.decode(alteredCipher, encodedMessage);
                 }
+                
                 for (int k = 0; k < currDecoded.Length; k += 2)
                 {
                     if (!(duplicates.Contains(String.Format("{0}{1}", currDecoded[k], currDecoded[k + 1])) || duplicates.Contains(String.Format("{0}{1}", currDecoded[k + 1], currDecoded[k]))))
@@ -96,19 +73,14 @@ namespace Playfair_Cipher
                         total += 1;
                     }
                 }
-
                 score = total;
-                total = 0;
-                if (score > prevScore)
-                {
-                    originalCipher = alteredCipher;
-                    alteredCipher = new char[5,5];
-                }
+
+                MessageBox.Show(duplicates.Count.ToString());
                 duplicates.Clear();
                 n++;
-                //testing if the method works, currently not.
-                MessageBox.Show(score.ToString());
+                MessageBox.Show(currDecoded.Length.ToString());
                 MessageBox.Show(currDecoded);
+                MessageBox.Show(score.ToString());
             }
         }
     }

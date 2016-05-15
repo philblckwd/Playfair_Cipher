@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Playfair_Cipher
 {
@@ -10,18 +11,17 @@ namespace Playfair_Cipher
     {
         public RandomCipher()
         {
-
+            randCipher();
         }
 
-        Random rand = new Random();
-        MultiDArray multiD = new MultiDArray();
+        public char[,] randomCipher = new char[5, 5];
+        List<char> alphabetList = new List<char>();
 
         public char[,] randCipher()
         {
-            char[,] randomCipher = new char[5, 5];
+            Random rand = new Random();
+            int n = 0;
             string alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
-            List<char> alphabetList = new List<char>();
-
             for (int f = 0; f < alphabet.Length; f++)
             {
                 alphabetList.Add(alphabet[f]);

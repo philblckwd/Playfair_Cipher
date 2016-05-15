@@ -18,13 +18,15 @@ namespace Playfair_Cipher
         MultiDArray multiD = new MultiDArray();
 
         /*string encodedMessage = "DLQLNVLAXMDEOMRODNODZBMKASEIXM";*/
-        public string decodedMessage = "";
+        public string decodedMessage;
+        List<string> splitMessage = new List<string>();
 
-        public void decode(char[,] cipher, string encoded)
+        public string decode(char[,] cipher, string encoded)
         {
-            List<string> splitMessage = new List<string>();
+            decodedMessage = "";
+            splitMessage.Clear();
 
-            for (int i=0; i< encoded.Length; i+=2)
+            for (int i = 0; i < encoded.Length; i += 2)
             {
                 splitMessage.Add(String.Format("{0}{1}", encoded[i], encoded[i + 1]));
             }
@@ -34,14 +36,14 @@ namespace Playfair_Cipher
                 char second = splitMessage.ElementAt(j)[1];
                 char decodedFirst;
                 char decodedSecond;
-                int[] firstCoords = multiD.getIndex(kt.table, first);
-                int[] secondCoords = multiD.getIndex(kt.table, second);
+                int[] firstCoords = multiD.getIndex(cipher, first);
+                int[] secondCoords = multiD.getIndex(cipher, second);
 
                 if (firstCoords[0] == secondCoords[0])
                 {
                     if (firstCoords[1] == 0)
                     {
-                        decodedFirst = cipher[firstCoords[0], (cipher.GetLength(1)-1)];
+                        decodedFirst = cipher[firstCoords[0], (cipher.GetLength(1) - 1)];
                     }
                     else
                     {
@@ -49,7 +51,7 @@ namespace Playfair_Cipher
                     }
                     if (secondCoords[1] == 0)
                     {
-                        decodedSecond = cipher[secondCoords[0], (cipher.GetLength(1)-1)];
+                        decodedSecond = cipher[secondCoords[0], (cipher.GetLength(1) - 1)];
                     }
                     else
                     {
@@ -61,7 +63,7 @@ namespace Playfair_Cipher
                 {
                     if (firstCoords[0] == 0)
                     {
-                        decodedFirst = cipher[(cipher.GetLength(0) -1), firstCoords[1]];
+                        decodedFirst = cipher[(cipher.GetLength(0) - 1), firstCoords[1]];
                     }
                     else
                     {
@@ -69,7 +71,7 @@ namespace Playfair_Cipher
                     }
                     if (secondCoords[0] == 0)
                     {
-                        decodedSecond = cipher[(cipher.GetLength(0) -1), secondCoords[1]];
+                        decodedSecond = cipher[(cipher.GetLength(0) - 1), secondCoords[1]];
                     }
                     else
                     {
@@ -85,6 +87,7 @@ namespace Playfair_Cipher
                     decodedMessage += String.Format("{0}{1}", decodedFirst, decodedSecond);
                 }
             }
+            return decodedMessage;
         }
 
     }

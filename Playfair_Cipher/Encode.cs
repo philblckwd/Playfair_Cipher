@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -10,39 +11,49 @@ namespace Playfair_Cipher
     class Encode
     {
         keyTable kt = new keyTable();
+        RandomCipher rand = new RandomCipher();
         MultiDArray multiD = new MultiDArray();
 
         public Encode()
         {
-            MessageBox.Show(encode());
+            
         }
-        string message = "Can you pleease encode this for me";
+        public string message = "I hid my love when young till I Couldn’t bear the buzzing of a fly I hid my love to my despite Till I could not bear to look at light I dare not gaze upon her face But left her memory in each place Where’er I saw a wild flower lie I kissed and bade my love good-bye.";
         List<string> splitMessage = new List<string>();
         string encodedMessage;
 
-        string encode()
+        public List<string> prepMessage(string sentence)
         {
-            message = message.Replace(" ", String.Empty).ToUpper();
-            for (int i = 0; i < message.Length; i++)
+            sentence = Regex.Replace(sentence, @"[^a-zA-Z]", "").ToUpper();
+
+            for (int i = 0; i < sentence.Length; i++)
             {
-                if (i==0 || i % 2 == 0)
+                if (i == 0 || i % 2 == 0)
                 {
-                    if (i == (message.Length - 1))
+                    if (i == (sentence.Length - 1))
                     {
-                        message += "X";
-                        splitMessage.Add(String.Format("{0}{1}", message[i], message[i + 1]));
+                        sentence += "X";
+                        splitMessage.Add(String.Format("{0}{1}", sentence[i], sentence[i + 1]));
                     }
-                    else if (message[i] == message[i + 1])
+                    else if (sentence[i] == sentence[i + 1])
                     {
-                        message = message.Insert(i + 1, "X");
-                        splitMessage.Add(String.Format("{0}{1}", message[i], message[i + 1]));
+                        sentence = sentence.Insert(i + 1, "X");
+                        splitMessage.Add(String.Format("{0}{1}", sentence[i], sentence[i + 1]));
                     }
                     else
                     {
-                        splitMessage.Add(String.Format("{0}{1}", message[i], message[i + 1]));
+                        splitMessage.Add(String.Format("{0}{1}", sentence[i], sentence[i + 1]));
                     }
                 }
             }
+            return splitMessage;
+        }
+
+        public string encode(char[,] cipher, string sentence)
+        {
+            encodedMessage = "";
+            splitMessage.Clear();
+            prepMessage(sentence);
 
             for (int j=0; j<splitMessage.Count; j++)
             {
@@ -50,53 +61,53 @@ namespace Playfair_Cipher
                 char second = splitMessage.ElementAt(j)[1];
                 char encodedFirst;
                 char encodedSecond;
-                int[] firstCoords = multiD.getIndex(kt.table, first);
-                int[] secondCoords = multiD.getIndex(kt.table, second);
+                int[] firstCoords = multiD.getIndex(cipher, first);
+                int[] secondCoords = multiD.getIndex(cipher, second);
 
                 if (firstCoords[0] == secondCoords[0])
                 {
-                    if (firstCoords[1]+1 >= kt.table.GetLength(1))
+                    if (firstCoords[1]+1 >= cipher.GetLength(1))
                     {
-                        encodedFirst = kt.table[firstCoords[0], 0];
+                        encodedFirst = cipher[firstCoords[0], 0];
                     }
                     else
                     {
-                        encodedFirst = kt.table[firstCoords[0], firstCoords[1] + 1];
+                        encodedFirst = cipher[firstCoords[0], firstCoords[1] + 1];
                     }
-                    if (secondCoords[1]+1 >= kt.table.GetLength(1))
+                    if (secondCoords[1]+1 >= cipher.GetLength(1))
                     {
-                        encodedSecond = kt.table[secondCoords[0], 0];
+                        encodedSecond = cipher[secondCoords[0], 0];
                     }
                     else
                     {
-                        encodedSecond = kt.table[secondCoords[0], secondCoords[1] + 1];
+                        encodedSecond = cipher[secondCoords[0], secondCoords[1] + 1];
                     }
                     encodedMessage += String.Format("{0}{1}", encodedFirst, encodedSecond);
                 }
                 else if (firstCoords[1] == secondCoords[1])
                 {
-                    if (firstCoords[0] + 1 >= kt.table.GetLength(0))
+                    if (firstCoords[0] + 1 >= cipher.GetLength(0))
                     {
-                        encodedFirst = kt.table[0, firstCoords[1]];
+                        encodedFirst = cipher[0, firstCoords[1]];
                     }
                     else
                     {
-                        encodedFirst = kt.table[firstCoords[0] + 1, firstCoords[1]];
+                        encodedFirst = cipher[firstCoords[0] + 1, firstCoords[1]];
                     }
-                    if (secondCoords[0] + 1 >= kt.table.GetLength(0))
+                    if (secondCoords[0] + 1 >= cipher.GetLength(0))
                     {
-                        encodedSecond = kt.table[0, secondCoords[1]];
+                        encodedSecond = cipher[0, secondCoords[1]];
                     }
                     else
                     {
-                        encodedSecond = kt.table[secondCoords[0] + 1, secondCoords[1]];
+                        encodedSecond = cipher[secondCoords[0] + 1, secondCoords[1]];
                     }
                     encodedMessage += String.Format("{0}{1}", encodedFirst, encodedSecond);
                 }
                 else
                 {
-                    encodedFirst = kt.table[firstCoords[0], secondCoords[1]];
-                    encodedSecond = kt.table[secondCoords[0], firstCoords[1]];
+                    encodedFirst = cipher[firstCoords[0], secondCoords[1]];
+                    encodedSecond = cipher[secondCoords[0], firstCoords[1]];
 
                     encodedMessage += String.Format("{0}{1}", encodedFirst, encodedSecond);
                 }

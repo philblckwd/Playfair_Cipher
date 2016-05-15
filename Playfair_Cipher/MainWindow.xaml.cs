@@ -21,13 +21,17 @@ namespace Playfair_Cipher
     /// </summary>
     public partial class MainWindow : Window
     {
-        /*Encode encode = new Encode();
-        Decode decode = new Decode();*/
-        Break thing = new Break();
         public MainWindow()
         {
+            keyTable kt = new keyTable();
+            Break breakCode = new Break();
+            Encode encode = new Encode();
+            KnownBreak known = new KnownBreak();
+
             InitializeComponent();
-            thing.breakLoop();
+            //breakCode.breakLoop();
+            known.keyBreak();
+            encode.prepMessage(encode.message);
         }
     }
 }
