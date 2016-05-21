@@ -8,96 +8,86 @@ namespace Playfair_Cipher
 {
     class AlterCipher
     {
-        int m = 1;
+        int m = 0;
+        int n = 0;
+        int x = 0;
 
         public void alter(char[,] next, char[,] previous)
         {
-            for (int a = 0; a < previous.GetLength(0); a++)
+            if (x == 0 || x % 2 == 0)
             {
-                for (int b = 0; b < previous.GetLength(1); b++)
+                for (int i=0; i<previous.GetLength(0); i++)
                 {
-                    if (m == 1)
+                    for (int j=0; j<previous.GetLength(1); j++)
                     {
-                        if (b == 0 || b == 2 || b == 4)
+                        if (i == m)
                         {
-                            if (!(b == previous.GetLength(1) - 1))
+                            if (!(i == previous.GetLength(0) - 1))
                             {
-                                next[a, b] = previous[a, b + 2];
+                                next[i, j] = previous[i + 1, j];
+
                             }
                             else
                             {
-                                next[a, b] = previous[a, 0];
+                                next[i, j] = previous[0, j];
                             }
+                        }
+                        else if (i-1 == m)
+                        {
+                            next[i, j] = previous[i - 1, j];
                         }
                         else
                         {
-                            if (!(a == previous.GetLength(0) - 1))
-                            {
-                                next[a, b] = previous[a + 1, b];
-                            }
-                            else
-                            {
-                                next[a, b] = previous[0, b];
-                            }
-                        }
-                    }
-                    else if (m == 2)
-                    {
-                        if (b == 0 || b == 2 || b == 4)
-                        {
-                            if (!(a == 0))
-                            {
-                                next[a, b] = previous[a - 1, b];
-                            }
-                            else
-                            {
-                                next[a, b] = previous[previous.GetLength(0) - 1, b];
-                            }
-                        }
-                        else
-                        {
-                            if (b == 1)
-                            {
-                                next[a, b] = previous[a, b + 2];
-                            }
-                            else
-                            {
-                                next[a, b] = previous[a, b - 2];
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (b == 0 || b == 1)
-                        {
-                            if (!(a == previous.GetLength(0) - 1))
-                            {
-                                next[a, b] = previous[a + 1, b];
-                            }
-                            else
-                            {
-                                next[a, b] = previous[0, b];
-                            }
-                        }
-                        else
-                        {
-                            if (b == 2 || b == 3)
-                            {
-                                next[a, b] = previous[a, b + 1];
-                            }
-                            else
-                            {
-                                next[a, b] = previous[a, b - 2];
-                            }
+                            next[i, j] = previous[i, j];
                         }
                     }
                 }
+                if (m == previous.GetLength(0) - 1)
+                {
+                    m = 0;
+                }
+                else
+                {
+                    m++;
+                }
             }
-            if (m == 3)
+            else
             {
-                m = 0;
+                for (int i=0; i<previous.GetLength(0); i++)
+                {
+                    for (int j=0; j<previous.GetLength(1); j++)
+                    {
+                        if (j == n)
+                        {
+                            if (!(j == previous.GetLength(1) - 1))
+                            {
+                                next[i, j] = previous[i, j + 1];
+                            }
+                            else
+                            {
+                                next[i, j] = previous[i, 0];
+                            }
+                        }
+                        else if (j - 1 == n)
+                        {
+                            next[i, j] = previous[i, j-1];
+                        }
+                        else
+                        {
+                            next[i, j] = previous[i, j];
+                        }
+                    }
+                }
+                if (n == previous.GetLength(1) - 1)
+                {
+                    n = 0;
+                }
+                else
+                {
+                    n++;
+                }
             }
-            m++;
+            x++;
         }
     }
 }

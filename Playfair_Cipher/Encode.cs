@@ -25,6 +25,10 @@ namespace Playfair_Cipher
         public List<string> prepMessage(string sentence)
         {
             sentence = Regex.Replace(sentence, @"[^a-zA-Z]", "").ToUpper();
+            if (sentence.Contains('J'))
+            {
+                sentence.Replace('J', 'I');
+            }
 
             for (int i = 0; i < sentence.Length; i++)
             {

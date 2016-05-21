@@ -56,7 +56,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AlterCipher.cs" />
+    <Compile Include="BigramFreq.cs" />
     <Compile Include="KnownBreak.cs" />
+    <Compile Include="PlainTextPool.cs" />
     <Compile Include="RandomCipher.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

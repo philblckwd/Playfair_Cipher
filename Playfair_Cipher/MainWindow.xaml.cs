@@ -27,11 +27,19 @@ namespace Playfair_Cipher
             Break breakCode = new Break();
             Encode encode = new Encode();
             KnownBreak known = new KnownBreak();
+            BigramFreq freq = new BigramFreq();
+            PlainTextPool plain = new PlainTextPool();
 
             InitializeComponent();
-            //breakCode.breakLoop();
-            known.keyBreak();
-            encode.prepMessage(encode.message);
+            while (breakCode.final < 0.2)
+            {
+                breakCode.breakLoop();
+            }
+            MessageBox.Show(breakCode.currDecoded);
+            //MessageBox.Show(breakCode.currDecoded);
+            //known.keyBreak();
+            //encode.prepMessage(encode.message);
+            //freq.bigramsArray();
         }
     }
 }

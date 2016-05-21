@@ -17,28 +17,33 @@ namespace Playfair_Cipher
         RandomCipher randCipher = new RandomCipher();
         Decode decode = new Decode();
         AlterCipher alterCipher = new AlterCipher();
+        BigramFreq freq = new BigramFreq();
+        PlainTextPool reference = new PlainTextPool();
 
         //using encoded message of original string and key/Cipher I use in encode.cs and keytable.cs.
         string encodedMessage = "MBEBXFANADZGROAQLUBWRPPRDNLRCOPKDEIUDMCTWMTMQCSAYPAFMBEBXFANADVKXFODKFBPIVRPPRDNLRCOKVDILEVKANQNPVPRHBPBOEEXOQWBFVRVAKSCXEPYDRCTUPMAZBXEIXESXLRKDEDBLALDXVDMEXXEMKYVYVRPHAANVXCRRXBTMKOMOEOCDPODXFANADDQVOGPXM"; 
         List<string> splitMessage = new List<string>();
-        string decodedMessage;
 
         int n = 0;
-        int score = 0;
-        int prevScore = 0;
+        double total = 0;
+        public double score = 0;
+        public double prevScore = 0;
+        public double final;
 
-        string currDecoded;
+        public string currDecoded;
         List<string> duplicates = new List<string>();
+        List<string> decryptedBigrams = new List<string>();
 
         public void breakLoop()
         {
             char[,] originalCipher = randCipher.randCipher();
             char[,] alteredCipher = new char[5, 5];
-            int total = 0;
+            reference.reference();
 
-            while (n < 5)
+            while (n < 30)
             {
                 total = 0;
+                decryptedBigrams.Clear();
 
                 if (n == 0)
                 {
@@ -61,26 +66,30 @@ namespace Playfair_Cipher
                     alterCipher.alter(alteredCipher, originalCipher);
                     currDecoded = decode.decode(alteredCipher, encodedMessage);
                 }
-                
+
                 for (int k = 0; k < currDecoded.Length; k += 2)
                 {
-                    if (!(duplicates.Contains(String.Format("{0}{1}", currDecoded[k], currDecoded[k + 1])) || duplicates.Contains(String.Format("{0}{1}", currDecoded[k + 1], currDecoded[k]))))
+                    decryptedBigrams.Add(String.Format("{0}{1}", currDecoded[k], currDecoded[k + 1]));
+                }
+
+                foreach (string item in decryptedBigrams)
+                {
+                    if (reference.bigramFreq.ContainsKey(item))
                     {
-                        duplicates.Add(String.Format("{0}{1}", currDecoded[k], currDecoded[k + 1]));
-                    }
-                    else
-                    {
-                        total += 1;
+                        total += reference.bigramFreq[item];
                     }
                 }
                 score = total;
 
-                MessageBox.Show(duplicates.Count.ToString());
-                duplicates.Clear();
                 n++;
-                MessageBox.Show(currDecoded.Length.ToString());
-                MessageBox.Show(currDecoded);
-                MessageBox.Show(score.ToString());
+            }
+            if (score > prevScore)
+            {
+                final = score;
+            }
+            else
+            {
+                final = prevScore;
             }
         }
     }
